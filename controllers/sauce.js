@@ -82,7 +82,7 @@ exports.likeOrDislikeSauce = (req, res, next) => {
   switch (like) {
     case 1:
       Sauce.updateOne({ _id: sauceId }, { $push: { usersLiked: userId }, $inc: { likes: +1 }})
-        .then(() => res.status(200).json({ message: `J'aime`}))
+        .then(() => res.status(200).json({ message: "J'aime"}))
         .catch((error) => res.status(400).json({ error }));
 
     break;
@@ -92,12 +92,12 @@ exports.likeOrDislikeSauce = (req, res, next) => {
         .then((sauce) => {
           if (sauce.usersLiked.includes(userId)) {
             Sauce.updateOne({ _id: sauceId }, { $pull: { usersLiked: userId }, $inc: { likes: -1 }})
-              .then(() => res.status(200).json({ message: `Sans avis` }))
+              .then(() => res.status(200).json({ message: 'Sans avis' }))
               .catch((error) => res.status(400).json({ error }));
           }
           if (sauce.usersDisliked.includes(userId)) {
             Sauce.updateOne({ _id: sauceId }, { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 }})
-              .then(() => res.status(200).json({ message: `Sans avis` }))
+              .then(() => res.status(200).json({ message: 'Sans avis' }))
               .catch((error) => res.status(400).json({ error }));
           }
         })
@@ -107,7 +107,7 @@ exports.likeOrDislikeSauce = (req, res, next) => {
 
     case -1:
       Sauce.updateOne({ _id: sauceId }, { $push: { usersDisliked: userId }, $inc: { dislikes: +1 }})
-      .then(() => res.status(200).json({ message: `Je n'aime pas` }))
+      .then(() => res.status(200).json({ message: "Je n'aime pas" }))
       .catch((error) => res.status(400).json({ error }));
 
     break;
