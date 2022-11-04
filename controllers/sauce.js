@@ -1,5 +1,6 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs'); // file system = donne accès aux fonctions qui permettent de modifier le systeme de fichiers
+const { error } = require('console');
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce); // on parse pour avoir un objet utilisable
@@ -8,7 +9,11 @@ exports.createSauce = (req, res, next) => {
     const sauce = new Sauce({
       ...sauceObject,
       userId: req.auth.userId,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` // req.protocol = on obtien le 1er segment de l'url (http), host = 'localhost:3000', req.file.name = nom du fichier
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, // req.protocol = on obtien le 1er segment de l'url (http), host = 'localhost:3000', req.file.name = nom du fichier
+      likes: 0,
+      dislikes: 0,
+      usersLiked: [' '],
+      usersDisliked: [' '],
     });
 
     sauce.save()
@@ -59,12 +64,55 @@ exports.deleteSauce = (req, res, next) => {
 
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id }) // méthode findOne = trouver un seul objet (thing unique) ayant le même _id que la paramètre de la requête
-      .then(sauce => res.status(200).json(sauce))
-      .catch(error => res.status(404).json({ error })); // 404 = objet non trouvé
+      .then((sauce) => res.status(200).json(sauce))
+      .catch((error) => res.status(404).json({ error })); // 404 = objet non trouvé
   };
 
 exports.getAllSauces = (req, res, next) => {
     Sauce.find() // méthode find = renvoie un tableau contenant tous les "things" dans la base de données
-      .then(sauces => res.status(200).json(sauces))
-      .catch(error => res.status(400).json({ error }));
+      .then((sauces) => res.status(200).json(sauces))
+      .catch((error) => res.status(400).json({ error }));
   };
+
+exports.likeOrDislikeSauce = (req, res, next) => {
+  const like = req.body.like
+  const userId = req.body.userId
+  const sauceId = req.params.id
+
+  switch (like) {
+    case 1:
+      Sauce.updateOne({ _id: sauceId }, { $push: { usersLiked: userId }, $inc: { likes: +1 }})
+        .then(() => res.status(200).json({ message: `J'aime`}))
+        .catch((error) => res.status(400).json({ error }));
+
+    break;
+
+    case 0:
+      Sauce.findOne({ _id: sauceId })
+        .then((sauce) => {
+          if (sauce.usersLiked.includes(userId)) {
+            Sauce.updateOne({ _id: sauceId }, { $pull: { usersLiked: userId }, $inc: { likes: -1 }})
+              .then(() => res.status(200).json({ message: `Sans avis` }))
+              .catch((error) => res.status(400).json({ error }));
+          }
+          if (sauce.usersDisliked.includes(userId)) {
+            Sauce.updateOne({ _id: sauceId }, { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 }})
+              .then(() => res.status(200).json({ message: `Sans avis` }))
+              .catch((error) => res.status(400).json({ error }));
+          }
+        })
+        .catch((error) => res.status(404).json({ error }));
+
+    break;
+
+    case -1:
+      Sauce.updateOne({ _id: sauceId }, { $push: { usersDisliked: userId }, $inc: { dislikes: +1 }})
+      .then(() => res.status(200).json({ message: `Je n'aime pas` }))
+      .catch((error) => res.status(400).json({ error }));
+
+    break;
+
+    default:
+      console.log(error);
+  }
+}

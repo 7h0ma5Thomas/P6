@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 // On créé le schema de données dont on a besoin
 // l'élément _id sera généré automatiquement par MongoDB 
 const sauceSchema = mongoose.Schema({
+    userId: { type: String, required: true},
     name: { type: String, required: true },
     manufacturer: { type: String, required: true },
     description: { type: String, required: true },
@@ -11,8 +12,8 @@ const sauceSchema = mongoose.Schema({
     heat: { type: Number, required: true },
     likes: { type: Number, required: true },
     dislikes: { type: Number, required: true },
-    userLiked: { type: [String], required: true },
-    userDisliked: { type: [String], required: true },
+    usersLiked: { type: [String], required: true },
+    usersDisliked: { type: [String], required: true },
 });
 
 // Méthode pour exporté le schéma en modèle Mongoose "thing"
