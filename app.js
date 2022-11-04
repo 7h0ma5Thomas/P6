@@ -4,14 +4,16 @@ const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 const path = require('path');
+const cors = require('cors');
 
-mongoose.connect('mongodb+srv://Thom:toto86@cluster0.rwwmse4.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://Thom:toto86@cluster0.ppjx8bg.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+app.use(cors());
 
 // Ajout de headers pour permettre d'utiliser l'API sans problème
 app.use((req, res, next) => {
@@ -23,6 +25,8 @@ app.use((req, res, next) => {
 
 //app.use(bodyParser.json()); // intercepte toutes les requêtes qui ont un content-type: json
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 
 app.use('/api/sauce', sauceRoutes);
 app.use('/api/auth', userRoutes);
