@@ -8,7 +8,7 @@ Pour récupérer et utiliser le dossier front, 2 options :
 
 2) ou cliquez sur download ZIP dispo sur le lien ci-dessus
 
-Pour lancerle front :
+Pour lancer le front :
 
     1) cd frontend
 
