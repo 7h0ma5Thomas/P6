@@ -30,10 +30,12 @@ exports.modifyingSauce = (req, res, next) => {
       // si non on traite l'objet entrant
     } : { ...req.body }; 
 
+    // Si on a déjà une image uploadée
     if(req.file){
       Sauce.findOne({ _id: req.params.id})
       .then((sauce) => {
         const filename = sauce.imageUrl.split('/images/')[1];
+        // "unlink" permet de supprimer le fichier
         fs.unlink(`images/${filename}`, () => { 
           Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
           .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
@@ -44,6 +46,7 @@ exports.modifyingSauce = (req, res, next) => {
         res.status(500).json({ error })
       });
 
+    // Sinon dans le cas ou il n'y a pas d'image
     }else{
       Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
       .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
