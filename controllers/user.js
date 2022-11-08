@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+require('dotenv').config();
 
 exports.signup = (req, res, next) => {
     // "hash" = crypter le mdp, 10 (salt) correspond au nombre d'execution de l'algorytme de Hashage en nbr de tour
@@ -37,7 +38,7 @@ exports.login = (req, res, next) => {
                         // Identifiant utilisateur (payload)
                         { userId: user._id }, 
                         // Clé secrete pour l'encodage (+ longue et aléatoire pour la production)
-                        'RANDOM_TOKEN_SECRET', 
+                        process.env.TOKEN_SECRET, 
                         // Configuration de l'expiration du token au bout de 24h
                         { expiresIn: '24h' } 
                     )
