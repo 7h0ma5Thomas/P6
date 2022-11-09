@@ -1,5 +1,4 @@
 const express = require('express');
-//const helmet = require('helmet');
 const mongoose = require('mongoose');
 const sanitize = require('express-mongo-sanitize');
 const sauceRoutes = require('./routes/sauce');
@@ -17,7 +16,6 @@ mongoose.connect(process.env.DB_SECRET,
 const app = express();
 app.use(cors());
 
-//app.use(helmet());
 // Ajout de headers pour permettre d'utiliser l'API sans problème
 app.use((req, res, next) => {
     // "*" permet d'accéder à notre API depuis n'importe quelle origine
