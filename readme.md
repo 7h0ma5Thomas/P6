@@ -12,7 +12,7 @@ Pour lancer le front :
 
     1) cd frontend
 
-    2) Npm start
+    2) npm start
 
 Pour lancer le back :
 
