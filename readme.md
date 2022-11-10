@@ -12,7 +12,9 @@ Pour lancer le front :
 
     1) cd frontend
 
-    2) npm start
+    2) npm install
+
+    3) npm start
 
 Pour lancer le back :
 
