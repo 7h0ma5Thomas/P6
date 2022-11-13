@@ -34,6 +34,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+// Indique comment traiter les requêtes vers la route /image en rendant le dossier "images" statique
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
