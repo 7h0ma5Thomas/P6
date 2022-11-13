@@ -38,7 +38,7 @@ exports.modifyingSauce = (req, res, next) => {
         // "unlink" permet de supprimer le fichier
         fs.unlink(`images/${filename}`, () => { 
           Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
-          .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+          .then(() => res.status(201).json({ message: 'Sauce modifiée !' }))
           .catch((error) => res.status(400).json({ error }));
         });
       })
@@ -49,7 +49,7 @@ exports.modifyingSauce = (req, res, next) => {
     // Sinon dans le cas ou il n'y a pas d'image
     }else{
       Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
-      .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+      .then(() => res.status(201).json({ message: 'Sauce modifiée !' }))
       .catch(error => res.status(400).json({ error }));
     }
   };
@@ -65,7 +65,7 @@ exports.deleteSauce = (req, res, next) => {
         fs.unlink(`images/${filename}`, () => { 
           Sauce.deleteOne({ _id: req.params.id})
             .then(() => { res.status(200).json({ message: 'Sauce supprimée !' })})
-            .catch(error => res.status(401).json({ error }));
+            .catch(error => res.status(400).json({ error }));
         });
       }
     })
